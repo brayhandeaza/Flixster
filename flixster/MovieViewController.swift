@@ -11,6 +11,9 @@ import AlamofireImage
 class MovieViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var movies = [[String:Any]]()
     
+    
+    
+    
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -70,5 +73,4 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
         // Pass the selected object to the new view controller.
     }
     */
-
 }

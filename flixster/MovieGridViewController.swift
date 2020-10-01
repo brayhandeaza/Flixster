@@ -1,27 +1,39 @@
 //
-//  MovieViewController.swift
+//  MovieGridViewController.swift
 //  flixster
 //
-//  Created by Brayhan De Aza on 9/22/20.
+//  Created by Brayhan De Aza on 9/30/20.
 //
 
 import UIKit
 import AlamofireImage
 
-class MovieViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+
+class MovieGridViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+   
     var movies = [[String:Any]]()
-    
-    @IBOutlet weak var tableView: UITableView!
-    
+   
+    @IBOutlet weak var collectionview: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        tableView.dataSource = self
-        tableView.delegate = self
-        self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
+  
+        
+        collectionview.delegate = self
+        collectionview.dataSource = self
+        
+        let layout = collectionview.collectionViewLayout as! UICollectionViewFlowLayout
+        
+        layout.minimumLineSpacing = 4
+        layout.minimumInteritemSpacing = 4
+        
+        let width = (view.frame.size.width - layout.minimumInteritemSpacing * 2 ) / 3
+        
+        layout.itemSize = CGSize(width: width, height: width * 3 / 2)
+        
+        print((view.frame.size.width - layout.minimumInteritemSpacing * 2) / 3)
+        
+        let url = URL(string: "https://api.themoviedb.org/3/movie/297762/similar?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
               let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
               let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
               let task = session.dataTask(with: request) { (data, response, error) in
@@ -32,28 +44,22 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
                     let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                   
                     self.movies = dataDictionary["results"] as! [[String:Any]]
-                      
-                    self.tableView.reloadData() //recall the functions
-                      
-                    // TODO: Get the array of movies
-                    // TODO: Store the movies in a property to use elsewhere
-                    // TODO: Reload your table view data
+                    self.collectionview.reloadData()
+                    
                  }
               }
               task.resume()
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies.count    }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return movies.count
+    }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell") as! MovieCell
-        let movie = movies[indexPath.row]
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let movie = movies[indexPath.item]
+       let cell = collectionview.dequeueReusableCell(withReuseIdentifier: "MovieGridCell", for: indexPath) as! MovieGridCell
         
-        cell.nameLabel.text = movie["title"] as? String
-        cell.overviewLabel.text = movie["overview"] as? String
-        
-        let baseUrl = "https://image.tmdb.org/t/p/w185"
+        let baseUrl = "https://image.tmdb.org/t/p/w500"
         let posterPath = movie["poster_path"] as! String
         let posterUrl = URL(string: baseUrl + posterPath)
         
@@ -61,6 +67,7 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         return cell
     }
+    
     /*
     // MARK: - Navigation
 

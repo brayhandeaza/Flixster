@@ -16,8 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         let navigation = UINavigationBar.appearance()
-        navigation.barTintColor = UIColor.purple
+        navigation.barTintColor = UIColor.black
         navigation.titleTextAttributes = [.foregroundColor: UIColor.white]
+        
+        let tabBar = UITabBar.appearance()
+        tabBar.barTintColor = UIColor.black
+        
         return true
     }
 

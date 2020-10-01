@@ -17,21 +17,16 @@ class MovieGridViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         
-  
-        
         collectionview.delegate = self
         collectionview.dataSource = self
         
         let layout = collectionview.collectionViewLayout as! UICollectionViewFlowLayout
-        
-        layout.minimumLineSpacing = 4
-        layout.minimumInteritemSpacing = 4
+        layout.minimumLineSpacing = 5
+        layout.minimumInteritemSpacing = 5
         
         let width = (view.frame.size.width - layout.minimumInteritemSpacing * 2 ) / 3
-        
         layout.itemSize = CGSize(width: width, height: width * 3 / 2)
         
-        print((view.frame.size.width - layout.minimumInteritemSpacing * 2) / 3)
         
         let url = URL(string: "https://api.themoviedb.org/3/movie/297762/similar?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
               let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
@@ -68,13 +63,21 @@ class MovieGridViewController: UIViewController, UICollectionViewDataSource, UIC
         return cell
     }
     
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-    }
-    */
+        
+        // Find current movie superhero
+        let cell = sender as! UICollectionViewCell
+        let indexPath = collectionview.indexPath(for: cell)!
+        let movie = movies[indexPath.row]
+        
+        // Send movie to the destination ViewController
+        let detailsViewController = segue.destination as! MovieDetailsViewController
+        detailsViewController.movie = movie    }
+    
 }
